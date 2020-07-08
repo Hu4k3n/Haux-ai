@@ -1,4 +1,4 @@
-# Haux
+# Haux-ai
 Haux the voice assisstant
 
 Commands
