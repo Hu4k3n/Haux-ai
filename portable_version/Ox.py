@@ -38,7 +38,7 @@ def accept_speech ():
 
 def youtube_search(search):
     textToSearch = str(search)
-    query = textToSearch.replace(' ','+').replace('-','+')
+    query = textToSearch.replace(' ','+').replace('-','+').replace("\'", "")
     url = "https://www.youtube.com/results?search_query=" + query
     response = urllib.request.urlopen(url)
     html = response.read()
@@ -50,13 +50,7 @@ def youtube_search(search):
     os.system('firefox '+url)
 
 def info(search_text):
-    os.system('firefox https://google.com/search?q='+search_text.replace(' ', '+').replace('-', '+'))
-    # i = 1
-    # query = search_text
-    # for url in search(query, stop=1):
-    #     a = google_scrape(url)
-    #     print (str(i) + ". " + a)
-    #     os.system('firefox '+url)
+    os.system('firefox https://google.com/search?q='+search_text.replace("\'", "").replace(' ', '+').replace('-', '+'))
 def play_sound(i):
     i=int(i)
     dir='Documents/stuff/Ox/'
@@ -75,32 +69,68 @@ def play_sound(i):
         
 def main():
     flag=True
-    while flag:
+    found=True
+    cmd=""
+    while flag and found:
+        found=False
         cmd=accept_speech()
         if "search" in str(cmd) :
             print(cmd[7:])
             play_sound(1)
             info(cmd[7:])
-        if "open" in str(cmd):
+            found=True
+        if "find" in str(cmd) :
+            print(cmd[5:])
+            play_sound(1)
+            info(cmd[5:])
+            found=True
+        elif "open" in str(cmd):
             play_sound(1)
             if "terminal" in str(cmd):
                 os.system("gnome-terminal")
-                print(cmd[5:])
-                info(cmd[5:])
+                found=True
+            elif "telegram" in str(cmd) :
+                os.system("telegram-desktop")
+                found=True
+            elif "discord" in str(cmd) :
+                os.system("discord")
+                found=True
+            elif ("class" in str(cmd) or "classes" in str(cmd) or "classrooms" in str(cmd) or "classes" in str(cmd) or "classrooms" in str(cmd)) :
+                os.system("firefox https://classroom.google.com/u/2/h")
+                found=True
+            elif ("youtube" in str(cmd) or "Youtube" in str(cmd)):
+                os.system("firefox https://www.youtube.com/")
+                found=True
+            # else:
+            #     print(cmd[5:])
+            #     info(cmd[5:])
         if "close" in str(cmd):
             play_sound(1)
             if "browser" in str(cmd):
                 os.system('pkill firefox')
+                found=True
             if "terminal" in str(cmd) :
                 os.system('pkill gnome-terminal')
-        if "play" in str(cmd):
+                found=True
+            if "telegram" in str(cmd) :
+                os.system("pkill telegram-desktop")
+                found=True
+            if "discord" in str(cmd) :
+                os.system("pkill discord")
+                found=True
+        if "Play" in str(cmd) or "play" in str(cmd):
             print (cmd[5:])
             play_sound(1)
             youtube_search(cmd[5:])
-        if "kill yourself" in str(cmd) :
+            found=True
+        if "kill yourself" in str(cmd) or "bye" in str(cmd) :
             play_sound(2)
             os.system('pkill python3')
+            found=True
         flag=False
+    if not found:
+        info(cmd)    
     play_sound(2)
+
 if __name__ == '__main__':
     main()
