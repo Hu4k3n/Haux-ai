@@ -23,6 +23,7 @@ for i, microphone_name in enumerate(mic_list):
 def accept_speech ():
     with sr.Microphone(device_index = device_id, sample_rate = sample_rate, chunk_size = chunk_size) as source: 
         r.adjust_for_ambient_noise(source)
+        os.system("gnome-terminal -e \"vis -c .audiovis/cli-visualizer/examples/config\"")
         play_sound(0)
         print ("How can I help, Huraken ?")
         audio = r.listen(source) 
@@ -129,8 +130,10 @@ def main():
             found=True
         flag=False
     if not found:
+        play_sound(1)
         info(cmd)    
     play_sound(2)
+    os.system('pkill gnome-terminal')
 
 if __name__ == '__main__':
     main()
