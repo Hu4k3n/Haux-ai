@@ -23,7 +23,8 @@ for i, microphone_name in enumerate(mic_list):
 def accept_speech ():
     with sr.Microphone(device_index = device_id, sample_rate = sample_rate, chunk_size = chunk_size) as source: 
         r.adjust_for_ambient_noise(source)
-        os.system("gnome-terminal -e \"vis -c .audiovis/cli-visualizer/examples/config\"")
+        os.system("pkill gnome-terminal")
+        # os.system("gnome-terminal -e \"cava\" --hide-borders --hide-toolbar --hide-menubar --title=desktopconsole")
         play_sound(0)
         print ("How can I help, Huraken ?")
         audio = r.listen(source) 
@@ -53,6 +54,7 @@ def youtube_search(search):
 def info(search_text):
     os.system('firefox https://google.com/search?q='+search_text.replace("\'", "").replace(' ', '+').replace('-', '+'))
 def play_sound(i):
+    os.system("gnome-terminal -e \"vis -c .audiovis/cli-visualizer/examples/config\"")
     i=int(i)
     dir='Documents/stuff/Ox/'
     if i==0 :
@@ -67,6 +69,7 @@ def play_sound(i):
         u=([f for f in listdir(str(dir)+"audio/end/") if isfile(join(str(dir)+"audio/end/", f))])
         u=random.choice(u)
         playsound(str(dir)+"audio/end/"+str(u))
+    os.system("pkill gnome-terminal")
         
 def main():
     flag=True
@@ -85,10 +88,14 @@ def main():
             play_sound(1)
             info(cmd[5:])
             found=True
+        if "to do" in str(cmd) or "remind me" in str(cmd) :
+            play_sound(1)
+            os.system("todoist")
+            found=True
         elif "open" in str(cmd):
             play_sound(1)
             if "terminal" in str(cmd):
-                os.system("gnome-terminal")
+                os.system("xfce4-terminal --hide-borders --hide-toolbar --hide-menubar --title=desktopconsole")
                 found=True
             elif "telegram" in str(cmd) :
                 os.system("telegram-desktop")
@@ -111,6 +118,7 @@ def main():
                 os.system('pkill firefox')
                 found=True
             if "terminal" in str(cmd) :
+                os.system('pkill xfce4-terminal')
                 os.system('pkill gnome-terminal')
                 found=True
             if "telegram" in str(cmd) :
@@ -133,7 +141,6 @@ def main():
         play_sound(1)
         info(cmd)    
     play_sound(2)
-    os.system('pkill gnome-terminal')
 
 if __name__ == '__main__':
     main()
